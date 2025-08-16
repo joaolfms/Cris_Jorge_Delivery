@@ -1,0 +1,37 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  # Nome do serviço que irá rodar a nossa aplicação
+  chatbot_app:
+    # Instrução para construir a imagem Docker a partir do Dockerfile
+    # localizado no diretório atual (.).
+    build: .
+
+    # Nome do container que será criado.
+    container_name: whatsapp_chatbot_container
+
+    # Mapeamento de portas.
+    # Mapeia a porta 8000 do host para a porta 8000 do container.
+    # Formato: "HOST:CONTAINER"
+    ports:
+      - "8000:8000"
+
+    # Carrega as variáveis de ambiente a partir de um arquivo.
+    # O arquivo .env no diretório local será lido e suas variáveis
+    # serão injetadas no ambiente do container.
+    env_file:
+      - ./.env
+
+    # Montagem de volumes (opcional, mas ótimo para desenvolvimento).
+    # Mapeia o diretório 'app' local para o diretório '/code/app' no container.
+    # Isso significa que qualquer alteração que você fizer no código local
+    # será refletida instantaneamente dentro do container, sem a necessidade
+    # de reconstruir a imagem. O Uvicorn com '--reload' detectará a mudança.
+    volumes:
+      - ./app:/code/app
+
+    # Comando para reiniciar o container automaticamente em caso de falha.
+    restart: unless-stopped
+
